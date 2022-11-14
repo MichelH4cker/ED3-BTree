@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include "header.h"
-#include "readCommand.h"
+#include "administer-command.h"
 
 // SIZE
 #define DISK_PAGE_SIZE 72;

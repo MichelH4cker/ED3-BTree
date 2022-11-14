@@ -7,10 +7,7 @@
  * @return int retorna se o programa funcionou com êxito ou não 
  */
 int main (){
-    int commandKey;
-    scanf("%d", &commandKey);
-
-    readCommand(commandKey);
+    runCommand();
 
     return 0;
 }
