@@ -9,7 +9,7 @@
  * @param file_input_0 primeiro arquivo do input
  * @param file_input_1 segundo arquivo do input
  */
-void readCommand(int command_key, char *file_input_0, char *file_input_1);
+void readCommand(int *command_key, char *file_input_0, char *file_input_1);
 
 /**
  * @brief roda a funcionalidade desejada pelo usuário

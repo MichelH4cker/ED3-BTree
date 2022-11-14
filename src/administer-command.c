@@ -1,7 +1,7 @@
 #include "administer-command.h"
 
-void readCommand(int command_key, char *file_input_0, char *file_input_1){
-    scanf("%d", &command_key);
+void readCommand(int *command_key, char *file_input_0, char *file_input_1){
+    scanf("%d", &(*command_key));
     scanf("%s", file_input_0);
     scanf("%s", file_input_1);
 
@@ -13,11 +13,16 @@ void runCommand(){
     char file_input_0[20];
     char file_input_1[20];
 
-    readCommand(command, file_input_0, file_input_1);
+    readCommand(&command, file_input_0, file_input_1);
 
+    FILE* fp; 
+    
     switch (command){
     case 7:
-
+        fp = fopen(file_input_0, "r");
+        header header = readHeader(fp);
+        printHeader(header);
+        fclose(fp);
         break;
     case 8:
         break;
