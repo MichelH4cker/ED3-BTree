@@ -35,6 +35,8 @@
 *.i*86
 *.x86_64
 *.hex
+src/*.bin
+src/programaTrab
 
 # Debug files
 *.dSYM/
