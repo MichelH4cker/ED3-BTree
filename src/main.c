@@ -14,7 +14,7 @@ void readCommand(int *command_key, char *file_input_0, char *file_input_1){
     //printf("os comandos lidos foram: %d --- %s --- %s \n", command_key, file_input_0, file_input_1);
 }
 
-void menu()(){
+void menu(){
     int command;
     char file_input_0[20];
     char file_input_1[20];
