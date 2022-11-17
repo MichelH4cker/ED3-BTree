@@ -1,6 +1,25 @@
-#include "header.h"
+#include "index_file.h"
 
-header readHeader(FILE *fp){
+header createHeaderIndex(){
+    header header;
+    header.status = '0';
+    header.noRaiz = 0;
+    header.nroChavesTotal = 0;
+    header.alturaArvore = 0;
+    header.RRNproxNo = 0;
+    return header;
+}
+
+void fwriteHeaderIndex(FILE *fp, header header){
+    fseek(fp, 0, SEEK_SET);
+    fwrite(&header.status, sizeof(header.status), 1, fp);
+    fwrite(&header.noRaiz, sizeof(header.noRaiz), 1, fp);
+    fwrite(&header.nroChavesTotal, sizeof(header.nroChavesTotal), 1, fp);
+    fwrite(&header.alturaArvore, sizeof(header.alturaArvore), 1, fp);
+    fwrite(&header.RRNproxNo, sizeof(header.RRNproxNo), 1, fp);
+}
+
+header readHeaderIndex(FILE *fp){
     header header;
 
     fseek(fp, 0, SEEK_SET);
@@ -13,7 +32,7 @@ header readHeader(FILE *fp){
     return header;
 }
 
-void printHeader(header header){
+void printHeaderIndex(header header){
     printf("========================\n");
     printf("        CABEÇALHO       \n");
     printf("- status: %c\n", header.status);
