@@ -3,8 +3,9 @@
 
 #include <stdio.h>
 
-#include "header.h"
-#include "administer-command.h"
+#include "b-tree.h"
+#include "index_file.h"
+#include "data_file.h"
 
 // SIZE
 #define DISK_PAGE_SIZE 72;
@@ -14,5 +15,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+
+/**
+ * @brief lê os inputs digitados pelo usuário
+ * @param command_key inteiro que representa a funcionalidade desejada
+ * @param file_input_0 primeiro arquivo do input
+ * @param file_input_1 segundo arquivo do input
+ */
+void readCommand(int *command_key, char *file_input_0, char *file_input_1);
+
+/**
+ * @brief roda a funcionalidade desejada pelo usuário
+ */
+void runCommand();
 
 #endif
