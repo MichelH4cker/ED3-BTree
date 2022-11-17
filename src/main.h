@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+#include "funcoesFornecidas.h"
 #include "header.h"
 #include "readCommand.h"
 
@@ -27,5 +28,13 @@ typedef struct node {
     int keys[M - 1]; // array de keys
     struct node *pointers[M]; // M ponteiros para filhos
 } node;
+
+struct filter {
+    int  type; //tipo de dado
+    int  field_key; // inteiro que refere-se ao comando
+    int  number;
+    char string[22];
+};
+
 
 #endif
