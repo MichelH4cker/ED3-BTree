@@ -32,11 +32,50 @@ typedef struct {
 	char nomePais[22];		//variavel
 } register_bin;
 
+/**
+ * @brief retorna um inteiro que guarda o valor do RRN atual do ponteiro
+ * 
+ * @param fp ponteiro do arquivo 
+ * @return int RRN atual do ponteiro
+ */
+int returnBinCurrentRRN(FILE *fp);
 
+/**
+ * @brief lê arquivo e retorna struct do cabeçalho contendo todos os campos
+ * 
+ * @param fp ponteiro para arquivo
+ * @return header_bin armazena campos do cabeçalho
+ */
 header_bin readHeaderBin(FILE *fp);
 
+/**
+ * @brief mostra no terminal a struct header_bin. essa função é usada apenas para debug
+ * 
+ * @param header_bin cabeçalho a ser mostrado no terminal
+ */
+void printHeaderBin(header_bin header_bin);
+
+/**
+ * @brief lê no arquivo os campos de tamanho variável 
+ * 
+ * @param fp ponteiro para o arquivo
+ * @param string string a ser lida 
+ */
 void readvariableField(FILE *fp, char *string);
 
+/**
+ * @brief lê o registro do arquivo
+ * 
+ * @param fp ponteiro para arquivo
+ * @return register_bin armazena o registro
+ */
 register_bin readRegisterBin(FILE *fp);
+
+/**
+ * @brief mostra no terminal a struct register_bin. essa função é usada apenas para debug
+ * 
+ * @param register_bin registro a ser mostrado no terminal
+ */
+void printRegisterBin(register_bin register_bin);
 
 #endif
