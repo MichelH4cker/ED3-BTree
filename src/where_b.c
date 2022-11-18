@@ -1,6 +1,20 @@
 #include "where_b.h"
 
-
+void search (int *key, node Ap) {         //em progresso ainda
+       long i = 1;
+       if (Ap == NULL) { 
+              printf("TipoRegistro nao esta presente na arvore\n");
+              return;
+       }
+       
+       while (i < Ap->alturaNo && key > Ap->key[i - 1]) i++;
+       if (key == Ap->key[i - 1])
+              *key = Ap->key[i - 1];
+       else if (key < Ap->key[i - 1]) 
+              Pesquisa(x, Ap->pointers[i - 1]);
+       else 
+              Pesquisa(x, Ap->pointers[i]);
+} 
 
 void readFile(FILE *fp, int command, struct filter *filter, int n){
        fseek(fp, POS_PAG_DISCO_SIZE, SEEK_SET);
