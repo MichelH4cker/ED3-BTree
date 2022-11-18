@@ -1,6 +1,13 @@
 #ifndef __INDEX_FILE_H__
 #define __INDEX_FILE_H__
 
+struct node;
+
+#define DISK_PAGE_INDEX_SIZE 73
+#define HEADER_SIZE 65
+#define HEADER_FIELDS_SIZE 17
+#define HEADER_GARBAGE_SIZE 48
+
 #include "main.h"
 
 typedef struct header {
@@ -17,6 +24,8 @@ typedef struct header {
  * @param header 
  */
 header createHeaderIndex();
+
+struct node readNode(FILE *fp);
 
 /**
  * @brief 
@@ -41,5 +50,7 @@ header readHeaderIndex(FILE *fp);
  * @param header struct que guarda o cabeçalho a ser mostrado 
  */
 void printHeaderIndex(header header);
+
+//node readNode(FILE *fp);
 
 #endif
