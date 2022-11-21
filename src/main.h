@@ -3,31 +3,33 @@
 
 #include <stdio.h>
 
-#include "funcoesFornecidas.h"
-#include "header.h"
-#include "readCommand.h"
+#include "b-tree.h"
+#include "index_file.h"
+#include "data_file.h"
+
 
 // SIZE
 #define DISK_PAGE_SIZE 72;
 #define REGISTER_SIZE 65;
 
-#define M 5
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
 
 /**
- * @brief nó da árvore-B. 
- * A ordem da árvore é 5 (m = 5). Dessa forma, um nó (página) terá 4 chaves de busca e 5 descendentes. 
- * A chave de busca da árvore é o campo idConecta. 
+ * @brief lê os inputs digitados pelo usuário
+ * @param command_key inteiro que representa a funcionalidade desejada
+ * @param file_input_0 primeiro arquivo do input
+ * @param file_input_1 segundo arquivo do input
  */
-typedef struct node {
-    char folha;      // 1 byte
-    int nroChavesNo; // 4 bytes
-    int alturaNo;    // 4 bytes
-    int RRNdoNo;     // 4 bytes
+void readCommand(int *command_key, char *file_input_0, char *file_input_1);
 
-    int numberOfKeys; // número de keys do node (n < M). A chave do nó é o campo idConecta
-    int keys[M - 1]; // array de keys
-    struct node *pointers[M]; // M ponteiros para filhos
-} node;
+/**
+ * @brief roda a funcionalidade desejada pelo usuário
+ */
+void runCommand();
 
 struct filter {
     int  type; //tipo de dado
