@@ -96,6 +96,15 @@ void where(FILE *fp, FILE *fp_data){
     } target;
     char field_in[20];
     char str_in[20];
+
+
+    struct target {
+        int key;
+        int found_rrn;
+        int found_pos;
+    } target;
+    char field_in[20];
+    char str_in[20];
     register_bin _register;
     int find;
 

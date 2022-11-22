@@ -3,7 +3,6 @@
 int search(int rrn, int target, int found_rrn, int found_pos) {
     if (rrn == -1)
         return 1;       //nao encontrou a chave de busca
-    
     node node;
     //acha o node com o rrn passado
 
