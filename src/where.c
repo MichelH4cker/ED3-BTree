@@ -1,47 +1,24 @@
 #include "where.h"
 
-int search_data(char *filed_in, char *str_in) {
-    int output = 0;
-
-    if (filter->type == INTEGER){
-        switch (filter->field_key){
-            case ID_CONECTA:
-                output = (reg.idConecta == filter->number) ? 1 : 0;
-                if (output) return output;
-                break;
-            case ID_POPS_CONECTADO:
-                output = (reg.idPoPsConectado == filter->number) ? 1 : 0;
-                if (output) return output;
-                break; 
-            case VELOCIDADE:
-                output = (reg.velocidade == filter->number) ? 1 : 0;
-                if (output) return output;
-                break;
-            default:
-                break;
-        }
-    } else { //é char
-        switch (filter->field_key){
-            case SIGLA_PAIS:
-                output = (!strcmp(reg.siglaPais, filter->string)) ? 1 : 0; 
-                if (output) return output;
-                break;
-            case UNIDADE_MEDIDA:
-                output =  ((reg.unidadeMedida == filter->string[0]) && (strlen(filter->string) == 1)) ? 1 : 0; 
-                if (output) return output;
-                break;
-            case NOME_POPS:
-                output = (!strcmp(reg.nomePoPs, filter->string)) ? 1 : 0; 
-                if (output) return output;
-                break;
-            case NOME_PAIS:
-                output = (!strcmp(reg.nomePais, filter->string)) ? 1 : 0; 
-                if (output) return output;
-                break;
-            default:
-                break;
-        }
-    } 
+int search_data(char *field_in, char *str_in, register_bin _register) {
+    if (strcmp(field_in, "idPopsConectado") == 0)
+        if (strcmp(str_in, _register.idPoPsConectado) == 0)
+            return 1;
+    else if (strcmp(field_in, "velocidade") == 0)
+        if (strcmp(str_in, _register.velocidade) == 0)
+            return 1;
+    else if (strcmp(field_in, "siglaPais") == 0)
+        if (strcmp(str_in, _register.siglaPais) == 0)
+            return 1;
+    else if (strcmp(field_in, "unidadeMedida") == 0)
+        if (strcmp(str_in, _register.unidadeMedida) == 0)
+            return 1;
+    else if (strcmp(field_in, "nomePops") == 0)
+        if (strcmp(str_in, _register.nomePoPs) == 0)
+            return 1;
+    else if (strcmp(field_in, "nomePais") == 0)
+        if (strcmp(str_in, _register.nomePais) == 0)
+            return 1; 
     return 0;
 }
 
@@ -134,7 +111,7 @@ void where(FILE *fp, FILE *fp_data){
         }
         else {
             scan_quote_string(str_in);
-            if(search_data(field_in, str_in)) 
+            if(search_data(field_in, str_in, _register)) 
                 printTerminal(_register);
         }
 
