@@ -19,4 +19,15 @@ typedef struct node {
     struct node *pointers[M]; // M ponteiros para filhos
 } node;
 
+/**
+ * @brief faz a busca na árvore b
+ * @param node pagina em que ocorrera a busca
+ * @param target chave que está sendo buscada na árvore
+ * @param found_rrn página que contém a chave
+ * @param found_pos posição da chave na página
+ * @return 1 caso não encontrou - 
+ * @return 0 caso encontre 
+*/
+int search(int rrn, int target, int found_rrn, int found_pos);
+
 #endif
