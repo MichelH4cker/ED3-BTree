@@ -19,6 +19,7 @@ void menu(){
 
     strcat(path_data, file_input_data);
 
+    FILE *fp;
     switch (command){
     case 7:
         driver(path_data, file_input_index);
@@ -30,6 +31,11 @@ void menu(){
 
         break;
     case 10:
+        break;
+    case DEBUG:
+        fp = fopen(file_input_index, "rb");
+        showIndexFile(fp);
+        fclose(fp);
         break;
     default:
         printf("Comando inválido!\n");
