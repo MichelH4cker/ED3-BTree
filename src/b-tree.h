@@ -75,7 +75,7 @@ node createNode(int key, int leftChild, int rightChild);
 void insertKey(int position, key_type key_param, node *page, int promo_r_child);
 
 /**
- * @brief split b-tree
+ * @brief split b-tree. essa função segue o livro de referência da professora Cristina
  * 
  * @param i_key chave a ser inserida
  * @param i_rrn filho a direita do i_key

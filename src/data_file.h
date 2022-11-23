@@ -33,10 +33,10 @@ typedef struct {
 #include "main.h"
 
 /**
- * @brief 
+ * @brief dado um RRN, o ponteiro vai até ele
  * 
- * @param RRN 
- * @param fp 
+ * @param RRN RRN
+ * @param fp ponteiro para arquivo
  */
 void goToRRNbin(int RRN, FILE *fp);
 
@@ -69,7 +69,7 @@ void printHeaderBin(header_bin header_bin);
  * @param fp ponteiro para o arquivo
  * @param string string a ser lida 
  */
-void readvariableField(FILE *fp, char *string);
+void readVariableField(FILE *fp, char *string);
 
 /**
  * @brief lê o registro do arquivo
