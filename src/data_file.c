@@ -1,5 +1,9 @@
 #include "data_file.h"
 
+void goToRRNbin(int RRN, FILE *fp){
+    fseek(fp, DISK_PAGE_BIN_SIZE + RRN * REGISTER_BIN_SIZE, SEEK_SET);
+}
+
 int returnBinCurrentRRN(FILE *fp){
        return ceil((ftell(fp) - DISK_PAGE_BIN_SIZE) / REGISTER_BIN_SIZE);
 }
@@ -21,10 +25,10 @@ header_bin readHeaderBin(FILE *fp){
 void printHeaderBin(header_bin header_bin){
        printf("========================\n");
        printf("   CABEÇALHO BINÁRIO    \n");
-       printf("- status: %c\n", header_bin.status);
-       printf("- topo: %d\n", header_bin.topo);
-       printf("- proxRRN: %d\n", header_bin.proxRRN);
-       printf("- nroRegRem: %d\n", header_bin.nroRegRem);
+       printf("- status:      %c\n", header_bin.status);
+       printf("- topo:        %d\n", header_bin.topo);
+       printf("- proxRRN:     %d\n", header_bin.proxRRN);
+       printf("- nroRegRem:   %d\n", header_bin.nroRegRem);
        printf("- nroPagDisco: %d\n", header_bin.nroPagDisco);
        printf("- qttCompacta: %d\n", header_bin.qttCompacta);
        printf("========================\n");       
@@ -44,8 +48,10 @@ void readVariableField(FILE *fp, char *string){
 
 register_bin readRegisterBin(FILE *fp){
        register_bin register_bin;
-    
        fread(&register_bin.removido, sizeof(register_bin.removido), 1, fp);
+       if (register_bin.removido == '1') {
+              return register_bin;
+       }
        fread(&register_bin.encadeamento, sizeof(register_bin.encadeamento), 1, fp);
        fread(&register_bin.idConecta, sizeof(register_bin.idConecta), 1, fp);  
        fread(register_bin.siglaPais, 2, 1, fp);
@@ -55,9 +61,6 @@ register_bin readRegisterBin(FILE *fp){
        fread(&register_bin.velocidade, sizeof(register_bin.velocidade), 1, fp);
        readVariableField(fp, register_bin.nomePoPs);
        readVariableField(fp, register_bin.nomePais);
-
-       fseek(fp, VARIABLE_FIELD_SIZE - (strlen(register_bin.nomePoPs) + strlen(register_bin.nomePais) + (2 * PIPE_SIZE)), SEEK_CUR);
-
        return register_bin;
 }
 

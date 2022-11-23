@@ -6,8 +6,6 @@
 #define VARIABLE_FIELD_SIZE 44
 #define PIPE_SIZE 1
 
-#include "main.h"
-
 typedef struct {
 	char status;     // 1 btye
 	int topo;        // 4 btyes
@@ -23,7 +21,7 @@ typedef struct {
 	int encadeamento;    // 4 bytes		//auxiliares
 	
 	int idConecta;       // 4 bytes
-	char siglaPais[2];   // 2 bytes
+	char siglaPais[3];   // 2 bytes
 	int idPoPsConectado; // 4 bytes
 	char unidadeMedida;  // 1 byte
 	int velocidade;      // 4 bytes
@@ -31,6 +29,16 @@ typedef struct {
 	char nomePoPs[22];		//campos de tamanho
 	char nomePais[22];		//variavel
 } register_bin;
+
+#include "main.h"
+
+/**
+ * @brief 
+ * 
+ * @param RRN 
+ * @param fp 
+ */
+void goToRRNbin(int RRN, FILE *fp);
 
 /**
  * @brief retorna um inteiro que guarda o valor do RRN atual do ponteiro
