@@ -4,10 +4,10 @@
 header createHeaderIndex(){
     header header;
     header.status = '0';
-    header.noRaiz = -1;
-    header.nroChavesTotal = 0;
-    header.alturaArvore = 0;
-    header.RRNproxNo = 0;
+    header.noRaiz = 0;
+    header.nroChavesTotal = 1;
+    header.alturaArvore = 1;
+    header.RRNproxNo = 1;
     return header;
 }
 
@@ -53,22 +53,21 @@ int returnIndexCurrentRRN(FILE *fp){
     return ceil((ftell(fp) - HEADER_SIZE) / NODE_SIZE);
 }
 
-void goToRRN(int RRN, FILE *fp){
+void goToRRNindex(int RRN, FILE *fp){
     fseek(fp, HEADER_SIZE + RRN * NODE_SIZE, SEEK_SET);
 }
 
-void fwriteNode(FILE *fp, node node){
-    fseek(fp, node.RRNdoNo + HEADER_SIZE, SEEK_SET);
-    fwrite(&node.folha, sizeof(node.folha), 1, fp);
-    fwrite(&node.nroChavesNo, sizeof(node.nroChavesNo), 1, fp);
-    fwrite(&node.alturaNo, sizeof(node.alturaNo), 1, fp);
-    fwrite(&node.RRNdoNo, sizeof(node.RRNdoNo), 1, fp);
+void fwriteNode(FILE *fp, node page){
+    fwrite(&page.folha, sizeof(page.folha), 1, fp);
+    fwrite(&page.nroChavesNo, sizeof(page.nroChavesNo), 1, fp);
+    fwrite(&page.alturaNo, sizeof(page.alturaNo), 1, fp);
+    fwrite(&page.RRNdoNo, sizeof(page.RRNdoNo), 1, fp);
     for (int i = 0; i < M - 1; i++){
-        fwrite(&node.RRNpointers[i], sizeof(node.RRNpointers[i]), 1, fp);
-        fwrite(&node.keys[i].key, sizeof(node.keys[i].key), 1, fp);
-        fwrite(&node.keys[i].RRNkey, sizeof(node.keys[i].RRNkey), 1, fp);
+        fwrite(&page.RRNpointers[i], sizeof(page.RRNpointers[i]), 1, fp);
+        fwrite(&page.keys[i].key, sizeof(page.keys[i].key), 1, fp);
+        fwrite(&page.keys[i].RRNkey, sizeof(page.keys[i].RRNkey), 1, fp);
     }
-    fwrite(&node.RRNpointers[M], sizeof(node.RRNpointers[M]), 1, fp);
+    fwrite(&page.RRNpointers[M - 1], sizeof(page.RRNpointers[M - 1]), 1, fp);
 }
 
 node readNode(FILE *fp){
@@ -82,9 +81,21 @@ node readNode(FILE *fp){
         fread(&node.keys[i].key, sizeof(node.keys[i].key), 1, fp);
         fread(&node.keys[i].RRNkey, sizeof(node.keys[i].RRNkey), 1, fp);
     }
-    fread(&node.RRNpointers[M], sizeof(node.RRNpointers[M]), 1, fp);
-    
+    fread(&node.RRNpointers[M - 1], sizeof(node.RRNpointers[M - 1]), 1, fp);
     return node;
+}
+
+void printBigNode(transitionNode transitionNode){
+    printf("========================\n");
+    printf("           NÓZÃO        \n");
+    for (int i = 0; i < M + 1; i++){
+        printf("- RRNpointers[%d]: %d\n", i, transitionNode.RRNpointers[i]);
+    }
+    for (int i = 0; i < M; i++){
+        printf("- keys[%d].key: %d\n", i, transitionNode.keys[i].key);
+        printf("- keys[%d].RRNkey: %d\n", i, transitionNode.keys[i].RRNkey);
+    }    
+    printf("========================\n");
 }
 
 void printNode(node node){
@@ -102,4 +113,18 @@ void printNode(node node){
         printf("- keys[%d].RRNkey: %d\n", i, node.keys[i].RRNkey);
     }    
     printf("========================\n");
+}
+
+void showIndexFile(FILE *fp){
+    fseek(fp, 0, SEEK_END);
+    int F_END = ftell(fp);
+
+    fseek(fp, 0, SEEK_SET);
+    header h_index = readHeaderIndex(fp);
+    printHeaderIndex(h_index);
+    goToRRNindex(0, fp);
+    while (ftell(fp) < F_END){
+        node page = readNode(fp);
+        printNode(page);
+    }    
 }
