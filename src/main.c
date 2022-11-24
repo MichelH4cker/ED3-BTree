@@ -6,29 +6,24 @@
  */
 #include "main.h"
 
-void readCommand(int *command_key, char *file_input_0, char *file_input_1){
-    scanf("%d", &(*command_key));
-    scanf("%s", file_input_0);
-    scanf("%s", file_input_1);
-
-    //printf("os comandos lidos foram: %d --- %s --- %s \n", command_key, file_input_0, file_input_1);
-}
-
 void menu(){
     int command;
-    char file_input_0[20];
-    char file_input_1[20];
+    char file_input_data[40];
+    char file_input_index[40];
 
-    readCommand(&command, file_input_0, file_input_1);
+    scanf("%d", &command);
+    scanf("%s", file_input_data);
+    scanf("%s", file_input_index);
 
-    FILE* fp_0, fp_1; 
-    
+    char path_data[] = "arquivos/antes/";
+
+    strcat(path_data, file_input_data);
+
+    FILE *fp;
     switch (command){
     case 7:
-        fp_0 = fopen(file_input_0, "r");
-        header header = readHeaderIndex(fp_0);
-        printHeaderIndex(header);
-        fclose(fp_0);
+        driver(path_data, file_input_index);
+        binarioNaTela(file_input_index);
         break;
     case 8:
         break;
@@ -36,6 +31,11 @@ void menu(){
 
         break;
     case 10:
+        break;
+    case DEBUG:
+        fp = fopen(file_input_index, "rb");
+        showIndexFile(fp);
+        fclose(fp);
         break;
     default:
         printf("Comando inválido!\n");
