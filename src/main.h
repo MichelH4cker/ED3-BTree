@@ -11,6 +11,7 @@
 #include "b-tree.h"
 #include "index_file.h"
 #include "funcoesFornecidas.h"
+#include "commands.h"
 
 #define DEBUG -1
 

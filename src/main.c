@@ -15,27 +15,43 @@ void menu(){
     scanf("%s", file_input_data);
     scanf("%s", file_input_index);
 
-    char path_data[] = "arquivos/antes/";
-
-    strcat(path_data, file_input_data);
+    // LOCAL
+    //char path_data[] = "arquivos/antes/";
+    //strcat(path_data, file_input_data);
 
     FILE *fp;
+    int n;
     switch (command){
     case 7:
-        driver(path_data, file_input_index);
+        // RUN CODES
+        driver(file_input_data, file_input_index);
+        
+        // LOCAL
+        //driver(path_data, file_input_index);
+
         binarioNaTela(file_input_index);
         break;
     case 8:
         break;
     case 9:
-
+        scanf("%d", &n);
+        // RUN CODES
+        insertInto(file_input_data, file_input_index, n);
+        binarioNaTela(file_input_data);
+        binarioNaTela(file_input_index);
+        
+        // LOCAL
+        //insertInto(path_data, file_input_index, n);
+        //binarioNaTela(path_data);
+        //binarioNaTela(file_input_index);
         break;
     case 10:
         break;
     case DEBUG:
-        fp = fopen(file_input_index, "rb");
-        showIndexFile(fp);
-        fclose(fp);
+        // LOCAL
+        //fp = fopen(path_data, "rb+");
+        //showBinFile(fp);
+        //fclose(fp);
         break;
     default:
         printf("Comando inválido!\n");
