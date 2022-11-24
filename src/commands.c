@@ -54,3 +54,47 @@ register_bin readInput(register_bin register_bin) {
 	return register_bin;
 }
 
+void insertInto(char *file_input_data, char *file_input_index, int n){
+    // ABRE ARQUIVO
+    FILE *fp_data = fopen(file_input_data, "rb+");
+    if(fp_data == NULL){
+        printf("Erro no processamento do arquivo!\n");
+        return;
+    } 
+    
+	// LÊ HEADER DO ARQUIVO DE DADOS
+    header_bin header_var = readHeaderBin(fp_data);
+    header_var.status = '0';
+    fwriteHeaderBin(fp_data, header_var);
+
+	// PREPARA E LÊ NOVOS REGISTROS
+    register_bin array_reg_bin[n];
+    for (int i = 0; i < n; i++){
+        array_reg_bin[i].removido = '0';
+        array_reg_bin[i].encadeamento = -1;
+        array_reg_bin[i] = readInput(array_reg_bin[i]);
+    }
+
+
+    // INSERÇÃO NO ARQUIVO DE DADOS
+    for (int i = 0; i < n; i++) {
+		if (header_var.topo == -1) {
+			goToRRNbin(header_var.proxRRN, fp_data);
+			header_var.proxRRN++;
+		} else {
+            searchRegisterBinRemoved(fp_data, &header_var);
+			header_var.nroRegRem--;
+		}
+
+        fwriteRegisterBin(fp_data, array_reg_bin[i]);
+	}
+
+    // ATUALIZAÇÃO DO HEADER
+    header_var.status = '1';
+    fwriteHeaderBin(fp_data, header_var);
+
+	fclose(fp_data);
+
+	// CRIAÇÃO DO INDEX
+	driver(file_input_data, file_input_index);
+}
