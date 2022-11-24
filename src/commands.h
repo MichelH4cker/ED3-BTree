@@ -3,5 +3,6 @@
 
 #include "main.h"
 
+register_bin readInput(register_bin register_bin);
 
 #endif
