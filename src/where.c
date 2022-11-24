@@ -103,6 +103,18 @@ void where(FILE *fp_index, FILE *fp_data){
     int find;
     target *inputs = malloc(sizeof(target) * n);
 
+
+    struct target {
+        int key;
+        int found_rrn;
+        int found_pos;
+    } target;
+    char field_in[20];
+    char str_in[20];
+    register_bin _register;
+    int find;
+
+    fseek(fp_data, 65, SEEK_SET);
     for (int i = 0; i < n; i++) {
         scan_quote_string(inputs[i].field_in);
         if (strcmp(inputs[i].field_in, "idConecta") == 0)

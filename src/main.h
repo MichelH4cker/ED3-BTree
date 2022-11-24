@@ -54,11 +54,18 @@ void readCommand(int *command_key, char *file_input_0, char *file_input_1);
  */
 void runCommand();
 
-struct filter {
-    int  type; //tipo de dado
-    int  field_key; // inteiro que refere-se ao comando
-    int  number;
-    char string[22];
+struct reg {
+	char removido;     // 1 byte		//campos
+	int encadeamento;  // 4 bytes		//auxiliares
+	
+	int idConecta;          // 4 bytes
+	char siglaPais[3];      // 2 bytes
+	int idPoPsConectado;    // 4 bytes
+	char unidadeMedida;     // 1 byte
+	int velocidade;         // 4 bytes
+
+	char nomePoPs[22];		//campos de tamanho
+	char nomePais[22];		//variavel
 };
 
 
