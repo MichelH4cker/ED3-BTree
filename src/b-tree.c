@@ -9,6 +9,8 @@ int search(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, in
     fread(pos_data, sizeof(int), 1, fp_index);
 
     fseek(fp_data, pos_data, SEEK_SET);
+    //header _header;
+    //_header = readHeaderIndex(fp_index);
     
 
     //acha o node com o rrn passado
