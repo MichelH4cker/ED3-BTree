@@ -11,10 +11,6 @@
  */
 #include "b-tree.h"
 
-int registerHasBenRemoved(register_bin register_bin){
-    return register_bin.removido == '1' ? 1 : 0;
-}
-
 void deletePage(node *page){
     for (int i = 0; i < M - 1; page->keys[i].key = -1, page->keys[i].RRNkey = -1, i++);
 

@@ -1,3 +1,13 @@
+/**
+ * @file commands.c
+ * @author Michel Hecker Faria (12609690)
+ * @brief funções necessárias para execução dos comandos solicitados para desenvolvimento
+ * @version 0.1
+ * @date 2022-11-24
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #include "commands.h"
 
 register_bin readInput(register_bin register_bin) {
@@ -9,13 +19,13 @@ register_bin readInput(register_bin register_bin) {
     char velocidade[4];
 
     // LẼ ENTRADAS
-	scanf("%d", &register_bin.idConecta);				
-	scan_quote_string(register_bin.nomePoPs);				
-	scan_quote_string(register_bin.nomePais);			
-	scan_quote_string(siglaPais);			
-	scan_quote_string(idPoPsConectado);
-	scan_quote_string(unidadeMedida);		
-	scanf("%s\n", velocidade);
+    scanf("%d", &register_bin.idConecta);				
+    scan_quote_string(register_bin.nomePoPs);				
+    scan_quote_string(register_bin.nomePais);			
+    scan_quote_string(siglaPais);			
+    scan_quote_string(idPoPsConectado);
+    scan_quote_string(unidadeMedida);		
+    scanf("%s\n", velocidade);
     
     // COMPLETA COM LIXO SE O CAMPO É NULO CASO CONTRÁRIO GUARDA O INPUT DIGITADO NO REGISTRO
   	if (strcmp(register_bin.nomePoPs, "NULO") == 0){

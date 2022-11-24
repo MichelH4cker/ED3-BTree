@@ -1,5 +1,9 @@
 #include "data_file.h"
 
+int registerHasBenRemoved(register_bin register_bin){
+    return register_bin.removido == '1' ? 1 : 0;
+}
+
 void goToRRNbin(int RRN, FILE *fp){
     fseek(fp, DISK_PAGE_BIN_SIZE + RRN * REGISTER_BIN_SIZE, SEEK_SET);
 }

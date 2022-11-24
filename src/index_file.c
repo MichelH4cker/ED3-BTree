@@ -1,3 +1,13 @@
+/**
+ * @file index_file.c
+ * @author Michel Hecker Faria (12609690)
+ * @brief arquivo que contém todas as funções necessárias para manipulação, leitura e administração dos arquivos index (arquivos de árvore B)
+ * @version 0.1
+ * @date 2022-11-24
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #include "index_file.h"
 
 // HEADER
