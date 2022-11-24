@@ -88,6 +88,23 @@ void readVariableField(FILE *fp, char *string);
 register_bin readRegisterBin(FILE *fp);
 
 /**
+ * @brief
+ *
+ * @param fp
+ * @param string
+ * @return int
+ */
+void fwriteVariableField(FILE *fp, char *string);
+
+/**
+ * @brief
+ *
+ * @param fp
+ * @param register_bin
+ */
+void fwriteRegisterBin(FILE *fp, register_bin register_bin);
+
+/**
  * @brief mostra no terminal a struct register_bin. essa função é usada apenas para debug
  * 
  * @param register_bin registro a ser mostrado no terminal

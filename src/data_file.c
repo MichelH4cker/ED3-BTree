@@ -74,6 +74,43 @@ register_bin readRegisterBin(FILE *fp){
        return register_bin;
 }
 
+void fwriteVariableField(FILE *fp, char *string){
+       int i = 0;
+       char PIPE = '|';
+       char c = string[0];
+       while (c != '\0' && c != PIPE && i < 21){
+              i++;
+              fwrite(&c, sizeof(char), 1, fp);
+              c = string[i];
+       }
+}
+
+void fwriteRegisterBin(FILE *fp, register_bin reg_bin){
+       // ESCREVE CAMPOS FIXOS
+       fwrite(&reg_bin.removido, sizeof(reg_bin.removido), 1, fp);
+       fwrite(&reg_bin.encadeamento, sizeof(reg_bin.encadeamento), 1, fp);
+       fwrite(&reg_bin.idConecta, sizeof(reg_bin.idConecta), 1, fp);  
+       fwrite(reg_bin.siglaPais, 2, 1, fp);
+       fwrite(&reg_bin.idPoPsConectado, sizeof(reg_bin.idPoPsConectado), 1, fp);
+       fwrite(&reg_bin.unidadeMedida, sizeof(reg_bin.unidadeMedida), 1, fp);
+       fwrite(&reg_bin.velocidade, sizeof(reg_bin.velocidade), 1, fp);
+
+       // ESCREVE CAMPO VARIÁVEIS
+       char PIPE = '|';
+       fwriteVariableField(fp, reg_bin.nomePoPs);
+       fwrite(&PIPE, sizeof(PIPE), 1, fp);
+       fwriteVariableField(fp, reg_bin.nomePais);
+       fwrite(&PIPE, sizeof(PIPE), 1, fp);
+
+       // COMPLETA COM LIXO
+       char TRASH = '$';
+       int trashAmount = REGISTER_BIN_SIZE - FIX_FIELD_SIZE - (strlen(reg_bin.nomePoPs) + strlen(reg_bin.nomePais)) - 2 * PIPE_SIZE;
+
+       for (int i = 0; i < trashAmount; i++){
+              fwrite(&TRASH, sizeof(TRASH), 1, fp);
+       }
+}
+
 void printRegisterBin(register_bin register_bin){
     printf("========================\n");
     printf("    REGISTRO BINÁRIO    \n");
