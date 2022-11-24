@@ -141,9 +141,6 @@ enum RETURN_VALUES insert(int *currentRRN, key_type key_param, int *promo_r_chil
         node page = readNode(fp_index);
         int position = idealKeyPosition(key_param, page);
 
-        printf("NODE BUSCADO: \n");
-        printNode(page);
-
         // VERIFICA SE EXISTE CHAVE REPETIDA 
         // (esse caso, com as especificações do trabalho, nunca ocorre. no entanto, como no livro utilizado como referência o autor faz essa verificação, achei interessante fazer mesmo assim)
         if (key_param.key == page.keys[position].key) return ERROR;
@@ -189,11 +186,6 @@ enum RETURN_VALUES insert(int *currentRRN, key_type key_param, int *promo_r_chil
             goToRRNindex(newNode.RRNdoNo, fp_index);
             fwriteNode(fp_index, newNode);
 
-            printf("PAGE: \n");
-            printNode(page);
-            printf("NEWPAGE: \n");
-            printNode(newNode);
-
             return PROMOTION;
         } 
     }
@@ -237,8 +229,6 @@ void driver(char *file_bin, char *file_index){
 
     fwriteNode(fp_index, root);
 
-    printNode(root);
-
     int currentRRN = 1;
     while (currentRRN < RRNlimit){
         // LÊ NO ARQUIVO DE DADOS A CHAVE E O RRN DELA
@@ -277,7 +267,6 @@ void driver(char *file_bin, char *file_index){
             newHeader.RRNproxNo += 1;
             newHeader.noRaiz = root.RRNdoNo;
             fwriteHeaderIndex(fp_index, newHeader);
-            printf("rrn do no: %d\n", root.RRNdoNo);
         }
 
         currentRRN++;
