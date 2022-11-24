@@ -22,6 +22,16 @@ header_bin readHeaderBin(FILE *fp){
        return header_bin;
 }
 
+void fwriteHeaderBin(FILE *fp, header_bin header_param){
+       fseek(fp, 0, SEEK_SET);
+       fwrite(&header_param.status, sizeof(header_param.status), 1, fp);
+       fwrite(&header_param.topo, sizeof(header_param.topo), 1, fp);
+       fwrite(&header_param.proxRRN, sizeof(header_param.proxRRN), 1, fp);
+       fwrite(&header_param.nroRegRem, sizeof(header_param.nroRegRem), 1, fp);
+       fwrite(&header_param.nroPagDisco, sizeof(header_param.nroPagDisco), 1, fp);
+       fwrite(&header_param.qttCompacta, sizeof(header_param.qttCompacta), 1, fp);
+}
+
 void printHeaderBin(header_bin header_bin){
        printf("========================\n");
        printf("   CABEÇALHO BINÁRIO    \n");
