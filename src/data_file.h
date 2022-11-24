@@ -119,4 +119,11 @@ void printRegisterBin(register_bin register_bin);
  */
 void searchRegisterBinRemoved(FILE *fp, header_bin *header_param);
 
+/**
+ * @brief
+ *
+ * @param fp
+ */
+void showBinFile(FILE *fp);
+
 #endif

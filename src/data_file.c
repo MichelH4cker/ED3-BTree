@@ -136,3 +136,20 @@ void searchRegisterBinRemoved (FILE *fp, header_bin *header_param) {
        goToRRNbin(searchedRRN, fp);
 }
 
+void showBinFile(FILE *fp){
+       fseek(fp, 0, SEEK_END);
+       int F_END = returnBinCurrentRRN(fp);
+
+       fseek(fp, 0, SEEK_SET);
+       header_bin h_bin = readHeaderBin(fp);
+       printHeaderBin(h_bin);
+       goToRRNbin(0, fp);
+
+       int RRN = 1;
+       while (RRN < F_END){
+              goToRRNbin(RRN, fp);
+              register_bin register_bin = readRegisterBin(fp);
+              printRegisterBin(register_bin);
+              RRN++;
+       }  
+}
