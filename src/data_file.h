@@ -56,7 +56,14 @@ int returnBinCurrentRRN(FILE *fp);
  */
 header_bin readHeaderBin(FILE *fp);
 
+/**
  * @brief
+ *
+ * @param fp
+ * @param header_param
+ */
+void fwriteHeaderBin(FILE *fp, header_bin header_param);
+
 /**
  * @brief mostra no terminal a struct header_bin. essa função é usada apenas para debug
  * 
