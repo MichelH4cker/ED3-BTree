@@ -5,7 +5,6 @@
 
 #define NODE_SIZE 65
 
-
 enum RETURN_VALUES{PROMOTION, NO_PROMOTION, ERROR};
 
 typedef struct key {
@@ -29,14 +28,6 @@ typedef struct transitionNode {
 } transitionNode;
 
 #include "main.h"
-
-/**
- * @brief lê o registor e retorna se ele está removido logicamente
- * 
- * @param register_bin struct que contém o registro lido no arquivo de dados 
- * @return int 1 para removido e 0 para não removido
- */
-int registerHasBenRemoved(register_bin register_bin);
 
 /**
  * @brief configura toda a struct passada para NIL
@@ -89,12 +80,12 @@ void split(key_type i_key, int *i_rrn, node *page, key_type *promo_key, int *pro
 /**
  * @brief função recursive que insere na árvore. essa função segue o livro de referência da professora Cristina
  * 
- * @param currentRRN 
- * @param key_param 
- * @param promo_r_child 
- * @param promo_key 
- * @param fp_index 
- * @return enum RETURN_VALUES 
+ * @param currentRRN RRN buscado para tentativa de inserção
+ * @param key_param struct chave a ser inserida em algum nó
+ * @param promo_r_child filho direito da chave promovida
+ * @param promo_key chave promovida
+ * @param fp_index ponteiro para arquivo index
+ * @return enum RETURN_VALUES retorna qual o caso da recursão
  */
 enum RETURN_VALUES insert(int *currentRRN, key_type key_param, int *promo_r_child, key_type *promo_key, FILE *fp_index);
 

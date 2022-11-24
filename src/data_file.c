@@ -1,5 +1,9 @@
 #include "data_file.h"
 
+int registerHasBenRemoved(register_bin register_bin){
+    return register_bin.removido == '1' ? 1 : 0;
+}
+
 void goToRRNbin(int RRN, FILE *fp){
     fseek(fp, DISK_PAGE_BIN_SIZE + RRN * REGISTER_BIN_SIZE, SEEK_SET);
 }
@@ -20,6 +24,16 @@ header_bin readHeaderBin(FILE *fp){
        fread(&header_bin.qttCompacta, sizeof(header_bin.qttCompacta), 1, fp);
 
        return header_bin;
+}
+
+void fwriteHeaderBin(FILE *fp, header_bin header_param){
+       fseek(fp, 0, SEEK_SET);
+       fwrite(&header_param.status, sizeof(header_param.status), 1, fp);
+       fwrite(&header_param.topo, sizeof(header_param.topo), 1, fp);
+       fwrite(&header_param.proxRRN, sizeof(header_param.proxRRN), 1, fp);
+       fwrite(&header_param.nroRegRem, sizeof(header_param.nroRegRem), 1, fp);
+       fwrite(&header_param.nroPagDisco, sizeof(header_param.nroPagDisco), 1, fp);
+       fwrite(&header_param.qttCompacta, sizeof(header_param.qttCompacta), 1, fp);
 }
 
 void printHeaderBin(header_bin header_bin){
@@ -64,6 +78,43 @@ register_bin readRegisterBin(FILE *fp){
        return register_bin;
 }
 
+void fwriteVariableField(FILE *fp, char *string){
+       int i = 0;
+       char PIPE = '|';
+       char c = string[0];
+       while (c != '\0' && c != PIPE && i < 21){
+              i++;
+              fwrite(&c, sizeof(char), 1, fp);
+              c = string[i];
+       }
+}
+
+void fwriteRegisterBin(FILE *fp, register_bin reg_bin){
+       // ESCREVE CAMPOS FIXOS
+       fwrite(&reg_bin.removido, sizeof(reg_bin.removido), 1, fp);
+       fwrite(&reg_bin.encadeamento, sizeof(reg_bin.encadeamento), 1, fp);
+       fwrite(&reg_bin.idConecta, sizeof(reg_bin.idConecta), 1, fp);  
+       fwrite(reg_bin.siglaPais, 2, 1, fp);
+       fwrite(&reg_bin.idPoPsConectado, sizeof(reg_bin.idPoPsConectado), 1, fp);
+       fwrite(&reg_bin.unidadeMedida, sizeof(reg_bin.unidadeMedida), 1, fp);
+       fwrite(&reg_bin.velocidade, sizeof(reg_bin.velocidade), 1, fp);
+
+       // ESCREVE CAMPO VARIÁVEIS
+       char PIPE = '|';
+       fwriteVariableField(fp, reg_bin.nomePoPs);
+       fwrite(&PIPE, sizeof(PIPE), 1, fp);
+       fwriteVariableField(fp, reg_bin.nomePais);
+       fwrite(&PIPE, sizeof(PIPE), 1, fp);
+
+       // COMPLETA COM LIXO
+       char TRASH = '$';
+       int trashAmount = REGISTER_BIN_SIZE - FIX_FIELD_SIZE - (strlen(reg_bin.nomePoPs) + strlen(reg_bin.nomePais)) - 2 * PIPE_SIZE;
+
+       for (int i = 0; i < trashAmount; i++){
+              fwrite(&TRASH, sizeof(TRASH), 1, fp);
+       }
+}
+
 void printRegisterBin(register_bin register_bin){
     printf("========================\n");
     printf("    REGISTRO BINÁRIO    \n");
@@ -77,4 +128,32 @@ void printRegisterBin(register_bin register_bin){
     printf("- nomePoPs: %s\n", register_bin.nomePoPs);
     printf("- nomePais: %s\n", register_bin.nomePais);
     printf("========================\n");
+}
+
+void searchRegisterBinRemoved (FILE *fp, header_bin *header_param) {
+       int searchedRRN = header_param->topo;
+       goToRRNbin(header_param->topo, fp);
+       
+       char removido;
+       fread(&removido, sizeof(removido), 1, fp);
+       fread(&header_param->topo, sizeof(header_param->topo), 1, fp);
+       goToRRNbin(searchedRRN, fp);
+}
+
+void showBinFile(FILE *fp){
+       fseek(fp, 0, SEEK_END);
+       int F_END = returnBinCurrentRRN(fp);
+
+       fseek(fp, 0, SEEK_SET);
+       header_bin h_bin = readHeaderBin(fp);
+       printHeaderBin(h_bin);
+       goToRRNbin(0, fp);
+
+       int RRN = 1;
+       while (RRN < F_END){
+              goToRRNbin(RRN, fp);
+              register_bin register_bin = readRegisterBin(fp);
+              printRegisterBin(register_bin);
+              RRN++;
+       }  
 }
