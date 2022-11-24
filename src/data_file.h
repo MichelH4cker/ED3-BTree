@@ -35,7 +35,7 @@ typedef struct {
 
 header_bin readHeaderBin(FILE *fp);
 
-void readvariableField(FILE *fp, char *string);
+void readVariableField(FILE *fp, char *string);
 
 register_bin readRegisterBin(FILE *fp);
 

@@ -21,7 +21,7 @@ void menu(){
 
     readCommand(&command, file_input_0, file_input_1);
 
-    FILE* fp_0, fp_1; 
+    FILE* fp_0, *fp_1; 
     
     switch (command){
     case 7:
@@ -31,6 +31,11 @@ void menu(){
         fclose(fp_0);
         break;
     case 8:
+        fp_0 = fopen(file_input_0, "r");
+        fp_1 = fopen(file_input_1, "r");
+        where(fp_1, fp_0);
+        fclose(fp_1);
+        fclose(fp_0);
         break;
     case 9:
 
