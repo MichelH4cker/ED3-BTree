@@ -125,3 +125,14 @@ void printRegisterBin(register_bin register_bin){
     printf("- nomePais: %s\n", register_bin.nomePais);
     printf("========================\n");
 }
+
+void searchRegisterBinRemoved (FILE *fp, header_bin *header_param) {
+       int searchedRRN = header_param->topo;
+       goToRRNbin(header_param->topo, fp);
+       
+       char removido;
+       fread(&removido, sizeof(removido), 1, fp);
+       fread(&header_param->topo, sizeof(header_param->topo), 1, fp);
+       goToRRNbin(searchedRRN, fp);
+}
+

@@ -111,4 +111,12 @@ void fwriteRegisterBin(FILE *fp, register_bin register_bin);
  */
 void printRegisterBin(register_bin register_bin);
 
+/**
+ * @brief
+ *
+ * @param fp
+ * @param header
+ */
+void searchRegisterBinRemoved(FILE *fp, header_bin *header_param);
+
 #endif
