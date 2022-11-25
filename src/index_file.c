@@ -11,6 +11,16 @@
 #include "index_file.h"
 
 // HEADER
+header createPatternHeaderIndex(){
+    header header;
+    header.status = '1';
+    header.noRaiz = -1;
+    header.nroChavesTotal = 0;
+    header.alturaArvore = 0;
+    header.RRNproxNo = 0;
+    return header;
+}
+
 header createHeaderIndex(){
     header header;
     header.status = '0';
