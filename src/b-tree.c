@@ -206,24 +206,40 @@ void driver(char *file_bin, char *file_index){
 
     // CRIA HEADER COM CONFIGURAÇÕES INICIAIS
     header headerIndex = createHeaderIndex();
+	headerIndex.status = '0'; //INCONSISTENTE
     fwriteHeaderIndex(fp_index, headerIndex);
 
     // LIMITE DE LEITURA DO ARQUIVO DE DADOS
     header_bin header_bin = readHeaderBin(fp_data);
     int RRNlimit = header_bin.proxRRN;
 
+	// CASO NÃO HAJA REGISTROS => ESCREVER CABEÇALHO E SAIR
+	if (header_bin.proxRRN == 0){
+		headerIndex = createPatternHeaderIndex();
+		fseek(fp_index, 0, SEEK_SET);
+	    fwriteHeaderIndex(fp_index, headerIndex);
+		return;
+	}
+
     // CONFIGURAÇÃO INICIAL DA PRIMEIRA ROOT
     // pula para o primeiro registro
-    fseek(fp_data, DISK_PAGE_BIN_SIZE, SEEK_SET); 
+    node root;
+	fseek(fp_data, DISK_PAGE_BIN_SIZE, SEEK_SET); 
     register_bin = readRegisterBin(fp_data);
-    myKey.RRNkey = 0;
-    myKey.key = register_bin.idConecta;
+    root = createNode(-1, -1, -1);
+	root.RRNdoNo = 1;
 
-    node root = createNode(myKey.key, -1, -1);
-    root.RRNdoNo = 0;
-    root.keys[0].RRNkey = myKey.RRNkey;
+	// SE O PRIMEIRO REGISTRO NÃO ESTÁ REMOVIDO => ESCREVER
+	if (!registerHasBenRemoved(register_bin)){
+		myKey.RRNkey = 0;
+    	myKey.key = register_bin.idConecta;
 
-    fwriteNode(fp_index, root);
+    	root = createNode(myKey.key, -1, -1);
+    	root.RRNdoNo = 0;
+    	root.keys[0].RRNkey = myKey.RRNkey;
+    	
+		fwriteNode(fp_index, root);
+	}
 
     int currentRRN = 1;
     while (currentRRN < RRNlimit){

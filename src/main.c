@@ -16,18 +16,18 @@ void menu(){
     scanf("%s", file_input_index);
 
     // LOCAL
-    //char path_data[] = "arquivos/antes/";
-    //strcat(path_data, file_input_data);
+    char path_data[] = "arquivos/antes/";
+    strcat(path_data, file_input_data);
 
     FILE *fp;
     int n;
     switch (command){
     case 7:
         // RUN CODES
-        driver(file_input_data, file_input_index);
+        //driver(file_input_data, file_input_index);
         
         // LOCAL
-        //driver(path_data, file_input_index);
+        driver(path_data, file_input_index);
 
         binarioNaTela(file_input_index);
         break;

@@ -17,6 +17,13 @@ typedef struct header {
 #include "main.h"
 
 /**
+ * @brief Create a Pattern Header Index object para caso não haja registros nenhum
+ * 
+ * @return header 
+ */
+header createPatternHeaderIndex();
+
+/**
  * @brief cria um tipo header
  * 
  * @param header header criada
