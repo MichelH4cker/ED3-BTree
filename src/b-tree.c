@@ -1,5 +1,6 @@
 /**
  * @file b-tree.c
+ * @author guilherme augusto moreira (12547281)
  * @author michel hecker faria (12609690)
  * @brief arquivo responsável por sintetizar todas as funções necessárias para o funcionamento da estrutura de dados entitulada de árvore-b. 
  * a ordem da árvore é de 5. 
@@ -11,41 +12,73 @@
  */
 #include "b-tree.h"
 
+node read_indexFile(FILE *fp_index, int rrn) {
+    rrn += REGISTER_SIZE;
+    fseek(fp_index, rrn, SEEK_SET);
+    node _node;
+    
+    int i = 0;
+    while (i < M && fread(&_node.RRNpointers[i], sizeof(int), 1, fp_index)) {
+        fread(&_node.keys[i].key, sizeof(int), 1, fp_index);
+        fread(&_node.keys[i].RRNkey, sizeof(int), 1, fp_index);
+        i++;
+    }
+    //printf("----------->%d\n", i);
+    if (i < M - 1)
+        for (; i < M; i++) {
+            _node.RRNpointers[i] = -1;
+            _node.keys[i].key = -1;
+            _node.keys[i].RRNkey = -1;
+        }
+    fread(&_node.RRNpointers[i], sizeof(int), 1, fp_index);
+
+    return _node;
+}
+
 int search(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, int found_pos) {
     if (rrn == -1)
         return 1;       //nao encontrou a chave de busca
-    node _node;
-    fseek(fp_index, rrn, SEEK_SET);
-    int pos_data;
-    fread(pos_data, sizeof(int), 1, fp_index);
+    node _node = read_indexFile(fp_index, rrn);
+    
+    header_bin header = readHeaderBin(fp_data);
+    header.status = '1';
+    fwriteHeaderBin(fp_data, header);
 
-    fseek(fp_data, pos_data, SEEK_SET);
-    //header _header;
-    //_header = readHeaderIndex(fp_index);
+    register_bin *_register = malloc(sizeof(register_bin) * (M - 1));
+    for (int i = 0; i < M; i++) {
+        goToRRNbin(_node.keys[i].RRNkey, fp_data);
+        _register[i] = readRegisterBin(fp_data);
+        if (_register[i].idConecta != _node.keys[i].key)
+            return 1;       //arquivo index está errado
+    }   
+    
     
 
     //acha o node com o rrn passado
 
-    for (int i = 0; i < _node.nroChavesNo; i++) {
-        fseek(fp_index, rrn, SEEK_SET);
-        if (target == _node.keys[i].key) {         //encontrou
-            //printf ("ENCONTROU\n");
-
+    for (int i = 0; i < M; i++) {
+        if (target == _register[i].idConecta) {         //encontrou
+            printf ("ENCONTROU\n");
+            found_rrn = _node.keys[i].RRNkey;
+            found_pos = i;
             return 0;       //encontrou
         }
-        else if (_node.folha == '0') {
-            if (target < _node.keys[i].key)
-                return(search(fp_index, fp_data, _node.keys[i].RRNkey, target, found_rrn, found_pos));
-            if (i < _node.nroChavesNo - 1 && target < _node.keys[i + 1].key)
-                return(search(fp_index, fp_data, _node.keys[i + 1].RRNkey, target, found_rrn, found_pos));
-            else if (i == _node.nroChavesNo - 1 && target > _node.keys[i].key)
-                return(search(fp_index, fp_data, _node.keys[i + 1].RRNkey, target, found_rrn, found_pos));
-        }
+        if (target < _register[i].idConecta)
+            return(search(fp_index, fp_data, _node.keys[i].RRNkey, target, found_rrn, found_pos));
+        if (i < _node.nroChavesNo - 1 && target < _register[i + 1].idConecta)
+            return(search(fp_index, fp_data, _node.keys[i + 1].RRNkey, target, found_rrn, found_pos));
+        else if (i == _node.nroChavesNo - 1 && target > _register[i].idConecta)
+            return(search(fp_index, fp_data, _node.keys[i + 1].RRNkey, target, found_rrn, found_pos));
+        
         else if (i == _node.nroChavesNo - 1) {
             //printf("Registro inexistente.\n");
             return 1;       // não encontrou
         }
     }
+
+    free(_register);
+    header.status = '0';
+    fwriteHeaderBin(fp_data, header);
 }
 
 void deletePage(node *page){

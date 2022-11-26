@@ -10,6 +10,6 @@
  * @param fp_index arquivo em que ocorrerá a busca
  * @param fp_data arquivo de dados
 */
-void where(FILE *fp_index, FILE *fp_data);
+void where(char *fp_index, char *fp_data);
 
 #endif

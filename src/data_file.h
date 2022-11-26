@@ -68,14 +68,6 @@ int returnBinCurrentRRN(FILE *fp);
 header_bin readHeaderBin(FILE *fp);
 
 /**
- * @brief
- * 
- * @param fp
- * @param string
-*/
-void readVariableField(FILE *fp, char *string);
-
-/**
  * @brief escreve no arquivo de dados o header passado como parâmetro
  *
  * @param fp ponteiro para arquivo de dados

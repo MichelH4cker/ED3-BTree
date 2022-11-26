@@ -80,7 +80,19 @@ void readFile(FILE *fp){
     printf("Numero de paginas de disco: %d\n", numeroPagDiscos);
 }
 
-void where(FILE *fp_index, FILE *fp_data){
+void where(char *index, char *data){
+    //ABRE OS ARQUIVOS
+    FILE *fp_data = fopen(data, "rb+");
+    if(fp_data == NULL){
+        printf("Erro no processamento do arquivo!\n");
+        return;
+    }
+    FILE *fp_index = fopen(index, "rb+");
+    if(fp_data == NULL){
+        printf("Erro no processamento do arquivo!\n");
+        return;
+    } 
+
     int n;
     scanf("%d", &n);
 
@@ -103,17 +115,6 @@ void where(FILE *fp_index, FILE *fp_data){
     int find;
     target *inputs = malloc(sizeof(target) * n);
 
-
-    struct target {
-        int key;
-        int found_rrn;
-        int found_pos;
-    } target;
-    char field_in[20];
-    char str_in[20];
-    register_bin _register;
-    int find;
-
     fseek(fp_data, 65, SEEK_SET);
     for (int i = 0; i < n; i++) {
         scan_quote_string(inputs[i].field_in);
@@ -122,13 +123,15 @@ void where(FILE *fp_index, FILE *fp_data){
         else
             scan_quote_string(inputs[i].str_in);
     }
-    fseek(fp_data, 65, SEEK_SET);
     for (int i = 0; i < n; i++) {
         _register = readRegisterBin(fp_data);
         if (strcmp(inputs[i].field_in, "idConecta") == 0) {
             find = search(fp_index, fp_data, header.noRaiz, inputs[i].key, inputs[i].found_rrn, inputs[i].found_pos);
-            if (find)
+            if (find) {
+                printf("Busca %d\n", i);
+                printf("Identificador do ponto: %d\n", inputs[i].found_pos);
                 printTerminal(_register);
+            }
         }
         else {
             if(search_data(inputs[i].field_in, inputs[i].str_in, _register)) 
@@ -140,4 +143,7 @@ void where(FILE *fp_index, FILE *fp_data){
 
     }
     free(inputs);
+
+    fclose(fp_data);
+    fclose(fp_index);
 }

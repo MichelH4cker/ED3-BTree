@@ -1,5 +1,6 @@
 /**
  * @file commands.c
+ * @author guilherme augusto moreira (12547281)
  * @author Michel Hecker Faria (12609690)
  * @brief funções necessárias para execução dos comandos solicitados para desenvolvimento
  * @version 0.1

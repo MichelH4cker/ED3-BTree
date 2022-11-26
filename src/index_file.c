@@ -1,5 +1,6 @@
 /**
  * @file index_file.c
+ * @author guilherme augusto moreira (12547281)
  * @author Michel Hecker Faria (12609690)
  * @brief arquivo que contém todas as funções necessárias para manipulação, leitura e administração dos arquivos index (arquivos de árvore B)
  * @version 0.1

@@ -18,16 +18,19 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+
 #include "data_file.h"
 #include "b-tree.h"
 #include "index_file.h"
 #include "funcoesFornecidas.h"
 #include "commands.h"
+#include "where.h"
 
+/*
 // SIZE
 #define HEADER_SIZE 20
-#define REGISTER_TOTAL_SIZE 64
-#define PAGE_DISC_SIZE 960
+
+
 #define STATUS_SIZE 1
 #define PROX_RRN_SIZE 4
 #define REMOVIDO_SIZE 1
@@ -35,8 +38,12 @@
 #define FIX_FIELD_SIZE 20
 #define VARIABLE_FIELD_SIZE 44
 #define PIPE_SIZE 1
-#define POS_PAG_DISCO_SIZE 13
+
 #define VIRGULA_SIZE 44		//valor da VIRGULA_SIZE equivalente a inteiro
+*/
+#define REGISTER_TOTAL_SIZE 64
+#define PAGE_DISC_SIZE 960
+#define POS_PAG_DISCO_SIZE 13
 
 // FIELDS KEYS
 #define ID_CONECTA 0

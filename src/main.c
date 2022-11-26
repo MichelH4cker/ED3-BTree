@@ -1,5 +1,5 @@
 /**
- * @authors Michel Hecker Faria (12609690) && Guilherme Augusto Moreira ()
+ * @authors Michel Hecker Faria (12609690) && Guilherme Augusto Moreira (12547281)
  * @brief responsável por controlar todo o funcionamento do programa,
  * apenas chamando as funções principais e cuidando do input do usuário
  * @return int retorna se o programa funcionou com êxito ou não 
@@ -32,11 +32,7 @@ void menu(){
         binarioNaTela(file_input_index);
         break;
     case 8:
-        //fp_0 = fopen(file_input_0, "r");
-        //fp_1 = fopen(file_input_1, "r");
-        //where(fp_1, fp_0);
-        //fclose(fp_1);
-        //fclose(fp_0);
+        where(path_data, file_input_index);
         break;
     case 9:
         scanf("%d", &n);

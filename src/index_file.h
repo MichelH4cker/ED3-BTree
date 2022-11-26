@@ -15,6 +15,7 @@ typedef struct header {
 } header;
 
 #include "main.h"
+#include "b-tree.h"
 
 /**
  * @brief Create a Pattern Header Index object para caso não haja registros nenhum

@@ -1,6 +1,8 @@
 #ifndef __FUNCOESFORNECIDAS_H__
 #define __FUNCOESFORNECIDAS_H__
 
+#include "main.h"
+
 /**
  * @brief le uma string do terminal e passa para a string
  * @param string que receberá a linha escrita no terminal
