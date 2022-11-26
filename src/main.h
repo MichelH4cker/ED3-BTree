@@ -17,6 +17,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
+#include "data_file.h"
+#include "b-tree.h"
+#include "index_file.h"
+#include "funcoesFornecidas.h"
+#include "commands.h"
 
 // SIZE
 #define HEADER_SIZE 20
@@ -41,18 +47,9 @@
 #define NOME_POPS 5
 #define NOME_PAIS 6
 
-/**
- * @brief lê os inputs digitados pelo usuário
- * @param command_key inteiro que representa a funcionalidade desejada
- * @param file_input_0 primeiro arquivo do input
- * @param file_input_1 segundo arquivo do input
- */
-void readCommand(int *command_key, char *file_input_0, char *file_input_1);
+#define DEBUG -1
 
-/**
- * @brief roda a funcionalidade desejada pelo usuário
- */
-void runCommand();
+void menu();
 
 struct reg {
 	char removido;     // 1 byte		//campos

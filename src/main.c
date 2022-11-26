@@ -1,46 +1,62 @@
 /**
- * @authors Michel Hecker Faria (12609690) && Guilherme Augusto Moreira (SEI LÁ O NUSP DESSE MERDA)
+ * @authors Michel Hecker Faria (12609690) && Guilherme Augusto Moreira ()
  * @brief responsável por controlar todo o funcionamento do programa,
  * apenas chamando as funções principais e cuidando do input do usuário
  * @return int retorna se o programa funcionou com êxito ou não 
  */
 #include "main.h"
 
-void readCommand(int *command_key, char *file_input_0, char *file_input_1){
-    scanf("%d", &(*command_key));
-    scanf("%s", file_input_0);
-    scanf("%s", file_input_1);
-
-    //printf("os comandos lidos foram: %d --- %s --- %s \n", command_key, file_input_0, file_input_1);
-}
-
 void menu(){
     int command;
-    char file_input_0[20];
-    char file_input_1[20];
+    char file_input_data[40];
+    char file_input_index[40];
 
-    readCommand(&command, file_input_0, file_input_1);
+    scanf("%d", &command);
+    scanf("%s", file_input_data);
+    scanf("%s", file_input_index);
 
-    FILE* fp_0, *fp_1; 
-    
+    // LOCAL
+    char path_data[] = "arquivos/antes/";
+    strcat(path_data, file_input_data);
+
+    FILE *fp;
+    int n;
     switch (command){
     case 7:
-        fp_0 = fopen(file_input_0, "r");
-        header header = readHeaderIndex(fp_0);
-        printHeaderIndex(header);
-        fclose(fp_0);
+        // RUN CODES
+        //driver(file_input_data, file_input_index);
+        
+        // LOCAL
+        driver(path_data, file_input_index);
+
+        binarioNaTela(file_input_index);
         break;
     case 8:
-        fp_0 = fopen(file_input_0, "r");
-        fp_1 = fopen(file_input_1, "r");
-        where(fp_1, fp_0);
-        fclose(fp_1);
-        fclose(fp_0);
+        //fp_0 = fopen(file_input_0, "r");
+        //fp_1 = fopen(file_input_1, "r");
+        //where(fp_1, fp_0);
+        //fclose(fp_1);
+        //fclose(fp_0);
         break;
     case 9:
-
+        scanf("%d", &n);
+        // RUN CODES
+        insertInto(file_input_data, file_input_index, n);
+        binarioNaTela(file_input_data);
+        binarioNaTela(file_input_index);
+        
+        // LOCAL
+        //insertInto(path_data, file_input_index, n);
+        //binarioNaTela(path_data);
+        //binarioNaTela(file_input_index);
         break;
     case 10:
+        break;
+    case DEBUG:
+        // LOCAL
+        //fp = fopen(path_data, "rb+");
+        //showBinFile(fp);
+        //fclose(fp);
         break;
     default:
         printf("Comando inválido!\n");
