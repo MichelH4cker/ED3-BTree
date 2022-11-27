@@ -85,23 +85,25 @@ void where(char *index, char *data){
     FILE *fp_data = fopen(data, "rb+");
     if(fp_data == NULL){
         printf("Erro no processamento do arquivo!\n");
+        printf("%s\n", data);
         return;
     }
     FILE *fp_index = fopen(index, "rb+");
     if(fp_data == NULL){
         printf("Erro no processamento do arquivo!\n");
+        printf("%s\n", index);
         return;
     } 
 
     int n;
     scanf("%d", &n);
 
+    printf("INICIO DE TUDO\n");
     node node;
-    header header;
-
-    header = readHeaderIndex(fp_index);
+    header header_index = readHeaderIndex(fp_index);
     //leitura do node com o header.noRaiz
 
+    printf("antes de tudo ;-;\n");
     typedef struct target {
         int key;
         int found_rrn;
@@ -116,6 +118,7 @@ void where(char *index, char *data){
     target *inputs = malloc(sizeof(target) * n);
 
     fseek(fp_data, 65, SEEK_SET);
+    printf("CHEGUEI AQUI\n");
     for (int i = 0; i < n; i++) {
         scan_quote_string(inputs[i].field_in);
         if (strcmp(inputs[i].field_in, "idConecta") == 0)
@@ -123,26 +126,33 @@ void where(char *index, char *data){
         else
             scan_quote_string(inputs[i].str_in);
     }
+    //printf("PASSSEI PELO LOOP DE ENTRADA --- %d\n", inputs[0]);
     for (int i = 0; i < n; i++) {
+        printf("hmm\n");
         _register = readRegisterBin(fp_data);
+        printf("ESTOU AQUI 0.O\n");
         if (strcmp(inputs[i].field_in, "idConecta") == 0) {
-            find = search(fp_index, fp_data, header.noRaiz, inputs[i].key, inputs[i].found_rrn, inputs[i].found_pos);
+            find = search(fp_index, fp_data, 65, inputs[i].key, inputs[i].found_rrn, inputs[i].found_pos);
             if (find) {
                 printf("Busca %d\n", i);
                 printf("Identificador do ponto: %d\n", inputs[i].found_pos);
                 printTerminal(_register);
             }
+            printf("JA FOI O IF DA ARVRE\n");
         }
         else {
             if(search_data(inputs[i].field_in, inputs[i].str_in, _register)) 
                 printTerminal(_register);
         }
-
+        printf("CHEGEUI NA VERIFICAÇÃO SE ENCONTROU OU NAO\n");
         if (!find)
             printf("Registro inexistente.\n");
 
     }
+    printf("SAI DO LOOP DE BUSCA\n");
     free(inputs);
+    //header_index.status = '1';
+    //fwriteHeaderIndex(fp_index, header_index);
 
     fclose(fp_data);
     fclose(fp_index);

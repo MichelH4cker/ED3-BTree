@@ -39,19 +39,24 @@ int search(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, in
     if (rrn == -1)
         return 1;       //nao encontrou a chave de busca
     node _node = read_indexFile(fp_index, rrn);
-    
-    header_bin header = readHeaderBin(fp_data);
-    header.status = '1';
-    fwriteHeaderBin(fp_data, header);
+    int initial_point = ftell(fp_data);
 
-    register_bin *_register = malloc(sizeof(register_bin) * (M - 1));
+    header_bin header_data = readHeaderBin(fp_data);
+    printHeaderBin(header_data);
+    header_data.status = '0';
+    fwriteHeaderBin(fp_data, header_data);
+
+    printf("INICIO DA BUSCA\n");
+    register_bin *_register; 
+    _register = malloc(sizeof(register_bin) * (M - 1));
     for (int i = 0; i < M; i++) {
+        printf("TO NO LOOP: %d\n", i);
         goToRRNbin(_node.keys[i].RRNkey, fp_data);
         _register[i] = readRegisterBin(fp_data);
         if (_register[i].idConecta != _node.keys[i].key)
             return 1;       //arquivo index está errado
     }   
-    
+    printf("TENHO OS REGISTROS JA :)\n");
     
 
     //acha o node com o rrn passado
@@ -75,10 +80,12 @@ int search(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, in
             return 1;       // não encontrou
         }
     }
+    printf("PASSSEI PELO LOOP DE BUSCA NO INDEX EM SI\n");
 
     free(_register);
-    header.status = '0';
-    fwriteHeaderBin(fp_data, header);
+    header_data.status = '1';
+    fwriteHeaderBin(fp_data, header_data);
+    fseek(fp_data, initial_point, SEEK_SET);
 }
 
 void deletePage(node *page){

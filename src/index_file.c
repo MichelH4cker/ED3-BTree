@@ -47,7 +47,7 @@ void fwriteHeaderIndex(FILE *fp, header headerIndex){
 
 header readHeaderIndex(FILE *fp){
     header header;
-
+    
     fseek(fp, 0, SEEK_SET);
     fread(&header.status, sizeof(header.status), 1, fp);
     fread(&header.noRaiz, sizeof(header.noRaiz), 1, fp);

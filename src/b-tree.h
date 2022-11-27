@@ -12,8 +12,6 @@ typedef struct key {
     int RRNkey;
 } key_type;
 
-#include "index_file.h"
-
 /**
  * @brief nó da árvore-B. 
  * A ordem da árvore é 5 (m = 5). Dessa forma, um nó (página) terá 4 chaves de busca e 5 descendentes. 
@@ -34,6 +32,7 @@ typedef struct transitionNode {
     key_type keys[M];
 } transitionNode;
 
+#include "index_file.h"
 #include "main.h"
 
 /**

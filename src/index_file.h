@@ -6,6 +6,7 @@
 #define HEADER_FIELDS_SIZE 17
 #define HEADER_GARBAGE_SIZE 48
 
+
 typedef struct header {
     char status;        // status do arquivo
     int noRaiz;         // RRN do nó raiz
