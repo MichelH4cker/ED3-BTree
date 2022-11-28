@@ -44,7 +44,7 @@ typedef struct transitionNode {
  * @return 1 caso não encontrou - 
  * @return 0 caso encontre 
 */
-int search(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, int found_pos);
+int search_btree(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, int found_pos);
 
 /**
  * @brief configura toda a struct passada para NIL

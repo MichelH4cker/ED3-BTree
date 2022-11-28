@@ -1,83 +1,144 @@
 #include "where.h"
+#include "main.h"
 
-int search_data(char *field_in, char *str_in, register_bin _register) {
-    if (strcmp(field_in, "idPopsConectado") == 0)
-        if (atoi(str_in) ==_register.idPoPsConectado)
-            return 1;
-    else if (strcmp(field_in, "velocidade") == 0)
-        if (atoi(str_in) == _register.velocidade)
-            return 1;
+//============== FUNCOES UTILIZADAS NO COMANDO 3 NO TRABALHO 1 ===================================
+int itsInteger(int field_key){
+    if (field_key == ID_CONECTA || field_key == ID_POPS_CONECTADO || field_key == VELOCIDADE){
+        return INTEGER;
+    }
+    return CHAR;
+}
+
+int selectFieldKey(char fieldName[]){
+    const char* dicionary[] = {"idConecta", "siglaPais", "idPoPsConectado", "unidadeMedida", "velocidade", "nomePoPs", "nomePais"};
+    int dicionary_len = 7;
+    for (int i = 0; i < dicionary_len; i++){
+        if (!strcmp(dicionary[i], fieldName)){
+            return i;
+        }
+    }   
+    return -1;
+}
+
+void set_array_filters(struct filter array_filter[], int n, target inputs){
+    char fieldName[22];
+    char fieldValueChar[22];
     
-    else if (strcmp(field_in, "siglaPais") == 0)
-        if (strcmp(str_in, _register.siglaPais) == 0)
-            return 1;
-    else if (strcmp(field_in, "unidadeMedida") == 0)
-        if (str_in[0] == _register.unidadeMedida)
-            return 1;
-    else if (strcmp(field_in, "nomePops") == 0)
-        if (strcmp(str_in, _register.nomePoPs) == 0)
-            return 1;
-    else if (strcmp(field_in, "nomePais") == 0)
-        if (strcmp(str_in, _register.nomePais) == 0)
-            return 1; 
+    int fieldValueInt;
+    int field_key;
+
+    struct filter filter;
+    for (int i = 0; i < n; i++){
+        field_key = selectFieldKey(inputs.field_in);
+        int type = itsInteger(field_key);
+
+        if (type == INTEGER){
+            filter.number = inputs.key ;
+        } else if (type == CHAR){
+            //scan_quote_string(fieldValueChar);
+            strcpy(filter.string, inputs.str_in);
+        } else {
+            printf("Nome do campo inexistente!\n");
+            return;
+        }
+
+        filter.type = type;
+        filter.field_key = field_key;
+
+        array_filter[i] = filter;
+    }
+}
+
+int search(register_bin reg, struct filter *filter){
+    int output = 0;
+    if (filter->type == INTEGER){
+        switch (filter->field_key){
+            case ID_CONECTA:
+                output = (reg.idConecta == filter->number) ? 1 : 0;
+                if (output) return output;
+                break;
+            case ID_POPS_CONECTADO:
+                output = (reg.idPoPsConectado == filter->number) ? 1 : 0;
+                if (output) return output;
+                break; 
+            case VELOCIDADE:
+                output = (reg.velocidade == filter->number) ? 1 : 0;
+                if (output) return output;
+                break;
+            default:
+                break;
+        }
+    } else { //é char
+        switch (filter->field_key){
+            case SIGLA_PAIS:
+                output = (!strcmp(reg.siglaPais, filter->string)) ? 1 : 0; 
+                if (output) return output;
+                break;
+            case UNIDADE_MEDIDA:
+                output =  ((reg.unidadeMedida == filter->string[0]) && (strlen(filter->string) == 1)) ? 1 : 0; 
+                if (output) return output;
+                break;
+            case NOME_POPS:
+                output = (!strcmp(reg.nomePoPs, filter->string)) ? 1 : 0; 
+                if (output) return output;
+                break;
+            case NOME_PAIS:
+                output = (!strcmp(reg.nomePais, filter->string)) ? 1 : 0; 
+                if (output) return output;
+                break;
+            default:
+                break;
+        }
+    } 
     return 0;
 }
 
-void printTerminal(register_bin reg){
-       if (reg.idConecta != -1)
-              printf("Identificador do ponto: %d\n", reg.idConecta);
-       if (strlen(reg.nomePoPs) != 0)        
-              printf("Nome do ponto: %s\n", reg.nomePoPs);
-       if (strlen(reg.nomePais) != 0)         
-              printf("Pais de localizacao: %s\n", reg.nomePais);
-       if (reg.siglaPais[0] != '$')         
-              printf("Sigla do pais: %s\n", reg.siglaPais);
-       if (reg.idPoPsConectado != -1)         
-              printf("Identificador do ponto conectado: %d\n", reg.idPoPsConectado);
-       if (reg.velocidade != -1)         
-              printf("Velocidade de transmissao: %d %cbps\n", reg.velocidade, reg.unidadeMedida);
-       printf("\n");
-}
-
-void readFile(FILE *fp){
+void readFile(FILE *fp, int command, struct filter *filter, int n){
     fseek(fp, POS_PAG_DISCO_SIZE, SEEK_SET);
     int numeroPagDiscos;
     fread(&numeroPagDiscos, sizeof(int), 1, fp);
-
     fseek(fp, 0, SEEK_END);
     long int f_end = ftell(fp);
-
     fseek(fp, PAGE_DISC_SIZE, SEEK_SET); // pula cabeçalho
-
     char string[22];
-      
+    
     register_bin reg;
-
     int n_found = 0;
     while (ftell(fp) < f_end){
-        fread(&reg.removido, sizeof(reg.removido), 1, fp);
-        if (reg.removido == '1') {
-            fseek(fp, REGISTER_TOTAL_SIZE - 1, SEEK_CUR); // pula reg vazio
-            continue;
+        reg = readRegisterBin(fp);
+
+        if (search(reg, &(*filter))){
+            n_found = n_found + 1;
+            printTerminal(reg);
         }
-              
-        fread(&reg.encadeamento, sizeof(reg.encadeamento), 1, fp);
-        fread(&reg.idConecta, sizeof(reg.idConecta), 1, fp);  
-        fread(reg.siglaPais, 2, 1, fp);
-        reg.siglaPais[2] = '\0';
-        fread(&reg.idPoPsConectado, sizeof(reg.idPoPsConectado), 1, fp);
-        fread(&reg.unidadeMedida, sizeof(reg.unidadeMedida), 1, fp);
-        fread(&reg.velocidade, sizeof(reg.velocidade), 1, fp);
-
-        readVariableField(fp, reg.nomePoPs);
-        readVariableField(fp, reg.nomePais);
-
-        //decidesWhatToDo(&(*fp), command, reg, filter, &n_found);
-             
+       
         fseek(fp, VARIABLE_FIELD_SIZE - (strlen(reg.nomePoPs) + strlen(reg.nomePais) + (2 * PIPE_SIZE)), SEEK_CUR);
     }
+    if (n_found == 0 && command != SELECT && command != DELETE) {
+           printf("Registro inexistente.\n\n");
+    }
+    if (command == SELECT){
+           printf("Numero de paginas de disco: %d\n\n", numeroPagDiscos);
+    } else if (command == WHERE){
+           printf("Numero de paginas de disco: %d\n", numeroPagDiscos);
+    }
+}
 
-    printf("Numero de paginas de disco: %d\n", numeroPagDiscos);
+//=============== INICIO DAS FUNCOES NOVAS PARA A BUSCA =============================
+void printTerminal(register_bin reg){
+    if (reg.idConecta != -1)
+        printf("Identificador do ponto: %d\n", reg.idConecta);
+    if (strlen(reg.nomePoPs) != 0)        
+        printf("Nome do ponto: %s\n", reg.nomePoPs);
+    if (strlen(reg.nomePais) != 0)         
+        printf("Pais de localizacao: %s\n", reg.nomePais);
+    if (reg.siglaPais[0] != '$')         
+        printf("Sigla do pais: %s\n", reg.siglaPais);
+    if (reg.idPoPsConectado != -1)         
+        printf("Identificador do ponto conectado: %d\n", reg.idPoPsConectado);
+    if (reg.velocidade != -1)         
+        printf("Velocidade de transmissao: %d %cbps\n", reg.velocidade, reg.unidadeMedida);
+    printf("\n");
 }
 
 void where(char *index, char *data){
@@ -98,27 +159,18 @@ void where(char *index, char *data){
     int n;
     scanf("%d", &n);
 
-    printf("INICIO DE TUDO\n");
+    int numeroPagDiscos;
+    fread(&numeroPagDiscos, sizeof(int), 1, fp_data);
+
     node node;
     header header_index = readHeaderIndex(fp_index);
     //leitura do node com o header.noRaiz
-
-    printf("antes de tudo ;-;\n");
-    typedef struct target {
-        int key;
-        int found_rrn;
-        int found_pos;
-    
-        char field_in[20];
-        char str_in[20];
-    } target;
     
     register_bin _register;
     int find;
     target *inputs = malloc(sizeof(target) * n);
 
-    fseek(fp_data, 65, SEEK_SET);
-    printf("CHEGUEI AQUI\n");
+    goToRRNbin(0, fp_data);
     for (int i = 0; i < n; i++) {
         scan_quote_string(inputs[i].field_in);
         if (strcmp(inputs[i].field_in, "idConecta") == 0)
@@ -126,23 +178,40 @@ void where(char *index, char *data){
         else
             scan_quote_string(inputs[i].str_in);
     }
-    //printf("PASSSEI PELO LOOP DE ENTRADA --- %d\n", inputs[0]);
     for (int i = 0; i < n; i++) {
-        printf("hmm\n");
-        _register = readRegisterBin(fp_data);
         printf("ESTOU AQUI 0.O\n");
+        //BUSCA NA ARVORE B
         if (strcmp(inputs[i].field_in, "idConecta") == 0) {
-            find = search(fp_index, fp_data, 65, inputs[i].key, inputs[i].found_rrn, inputs[i].found_pos);
+            find = search_btree(fp_index, fp_data, header_index.noRaiz, inputs[i].key, inputs[i].found_rrn, inputs[i].found_pos);
             if (find) {
                 printf("Busca %d\n", i);
                 printf("Identificador do ponto: %d\n", inputs[i].found_pos);
                 printTerminal(_register);
+                printf("Numero de paginas de disco: %d\n\n", numeroPagDiscos);
             }
             printf("JA FOI O IF DA ARVRE\n");
         }
+        // UTILIZA O COMANDO 3 DO TRABALHO PASSADO
         else {
-            if(search_data(inputs[i].field_in, inputs[i].str_in, _register)) 
-                printTerminal(_register);
+            printf("VAMO DE BUSCA NORMAL\n");
+            struct filter filter;
+            struct filter array_filter[n];
+
+            char fieldName[22];
+            char fieldValueChar[22];
+
+            int fieldValueInt;
+            int field_key;
+
+            set_array_filters(array_filter, n, inputs[i]);
+
+            for (int i = 0; i < n; i++){
+                printf("Busca %d\n", i + 1);
+                readFile(&(*fp_data), WHERE, &array_filter[i], n);
+                if(i + 1 != n){
+                    printf("\n");
+                } 
+            }
         }
         printf("CHEGEUI NA VERIFICAÇÃO SE ENCONTROU OU NAO\n");
         if (!find)
@@ -151,8 +220,6 @@ void where(char *index, char *data){
     }
     printf("SAI DO LOOP DE BUSCA\n");
     free(inputs);
-    //header_index.status = '1';
-    //fwriteHeaderIndex(fp_index, header_index);
 
     fclose(fp_data);
     fclose(fp_index);

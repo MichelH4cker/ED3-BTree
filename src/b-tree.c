@@ -35,7 +35,7 @@ node read_indexFile(FILE *fp_index, int rrn) {
     return _node;
 }
 
-int search(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, int found_pos) {
+int search_btree(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, int found_pos) {
     if (rrn == -1)
         return 1;       //nao encontrou a chave de busca
     node _node = read_indexFile(fp_index, rrn);
@@ -46,37 +46,46 @@ int search(FILE *fp_index, FILE *fp_data, int rrn, int target, int found_rrn, in
     header_data.status = '0';
     fwriteHeaderBin(fp_data, header_data);
 
-    printf("INICIO DA BUSCA\n");
     register_bin *_register; 
-    _register = malloc(sizeof(register_bin) * (M - 1));
+    _register = malloc(sizeof(register_bin) * (M));
     for (int i = 0; i < M; i++) {
         printf("TO NO LOOP: %d\n", i);
         goToRRNbin(_node.keys[i].RRNkey, fp_data);
-        _register[i] = readRegisterBin(fp_data);
+        
+        fread(&_register[i].removido, sizeof(_register[i].removido), 1, fp_data);
+        /*if (_register.removido == '1') {
+               return register_bin;
+        }*/
+        fread(&_register[i].encadeamento, sizeof(_register[i].encadeamento), 1, fp_data);
+        fread(&_register[i].idConecta, sizeof(_register[i].idConecta), 1, fp_data);  
+        fread(_register[i].siglaPais, 2, 1, fp_data);
+        _register[i].siglaPais[2] = '\0';
+        fread(&_register[i].idPoPsConectado, sizeof(_register[i].idPoPsConectado), 1, fp_data);
+        fread(&_register[i].unidadeMedida, sizeof(_register[i].unidadeMedida), 1, fp_data);
+        fread(&_register[i].velocidade, sizeof(_register[i].velocidade), 1, fp_data);
+        readVariableField(fp_data, _register[i].nomePoPs);
+        readVariableField(fp_data, _register[i].nomePais);
+
+        printf("meio do loop\n");
         if (_register[i].idConecta != _node.keys[i].key)
             return 1;       //arquivo index está errado
     }   
     printf("TENHO OS REGISTROS JA :)\n");
-    
-
-    //acha o node com o rrn passado
 
     for (int i = 0; i < M; i++) {
         if (target == _register[i].idConecta) {         //encontrou
-            printf ("ENCONTROU\n");
             found_rrn = _node.keys[i].RRNkey;
             found_pos = i;
             return 0;       //encontrou
         }
         if (target < _register[i].idConecta)
-            return(search(fp_index, fp_data, _node.keys[i].RRNkey, target, found_rrn, found_pos));
+            return(search_btree(fp_index, fp_data, _node.keys[i].RRNkey, target, found_rrn, found_pos));
         if (i < _node.nroChavesNo - 1 && target < _register[i + 1].idConecta)
-            return(search(fp_index, fp_data, _node.keys[i + 1].RRNkey, target, found_rrn, found_pos));
+            return(search_btree(fp_index, fp_data, _node.keys[i + 1].RRNkey, target, found_rrn, found_pos));
         else if (i == _node.nroChavesNo - 1 && target > _register[i].idConecta)
-            return(search(fp_index, fp_data, _node.keys[i + 1].RRNkey, target, found_rrn, found_pos));
+            return(search_btree(fp_index, fp_data, _node.keys[i + 1].RRNkey, target, found_rrn, found_pos));
         
         else if (i == _node.nroChavesNo - 1) {
-            //printf("Registro inexistente.\n");
             return 1;       // não encontrou
         }
     }
